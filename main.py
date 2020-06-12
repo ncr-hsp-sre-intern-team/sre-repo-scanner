@@ -28,11 +28,11 @@ def isValidRepoName(repoName, prodList=None):
            (prodList is None or product in prodList)
 
 
-def testRequestRemote(token, prodList=None):
+def testRequestRemote(token, orgName, prodList=None):
     g = Github(token)
-    user =  g.get_user()
+    org =  g.get_organization(orgName)
 
-    for idx, repo in enumerate(user.get_repos()):
+    for idx, repo in enumerate(org.get_repos()):
         print('***** Repo #%d *****' % idx)
         
         print('Name:', repo.name)
@@ -56,12 +56,14 @@ if __name__ == '__main__':
 
     prodList = [
         'ncr',
-        'hello'
+        'hello',
+        'sre'
     ]
 
     # 1. Test with remote repos
-    token = '6c9223d25aaca49ef9a118867b1bd3a40b083c85'
-    testRequestRemote(token, prodList)
+    token = 'd0275bdc86e92753dc7575e727f656dceaf7dee5'
+    orgName = 'ncr-hsp-sre-intern-team'
+    testRequestRemote(token, orgName, prodList)
     
     # 2. String test
     casesExpects = [
