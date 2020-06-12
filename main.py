@@ -2,13 +2,33 @@ from github import Github
 import re
 
 
-def isValidRepoName(repoName):
-    prog = re.compile(r"""( [a-zA-Z] \w* )     # product
-                          ( - [a-zA-Z] \w* )+  # hyphen and desription""", re.VERBOSE)
-    return re.fullmatch(prog, repoName) is not None
+def isValidRepoName(repoName, prodList=None):
+    """Test if a repo name string conforms to the naming convention
+
+    The format of the repo name must match "<product>-<description>".
+    1. Legal characters include:
+       * -, _, digits 0-9
+       * lower case letters
+       * upper case letters
+    2. <product> must be one listed in prodList.
+       If prodList is None, this rule is not enforced.
+    Examples: "nolo-online-ordering", "enterprise-insight", "ncr-mp", "ncr-mobilepay".
+    
+    Args:
+        repoName: string, name of the repository to test.
+        prodList: list of strings,  
+    
+    Returns:
+        a boolean indicating if the repo name conforms to the naming convention
+    """
+    prog = re.compile(r"""( \w+ )     # product
+                          ( - \w+ )+  # hyphen and desription""", re.VERBOSE)
+    product = re.split(r'-', repoName)[0]
+    return (re.fullmatch(prog, repoName) is not None) and \
+           (prodList is None or product in prodList)
 
 
-def testRequestRemote(token):
+def testRequestRemote(token, prodList=None):
     g = Github(token)
     user =  g.get_user()
 
@@ -16,16 +36,16 @@ def testRequestRemote(token):
         print('***** Repo #%d *****' % idx)
         
         print('Name:', repo.name)
-        print('Valid: %r' % isValidRepoName(repo.name))
+        print('Valid: %r' % isValidRepoName(repo.name, prodList=prodList))
 
         print()
 
 
-def testString(cases, expects):
+def testString(cases, expects, prodList=None):
     total, numCorrect = 0, 0
     for case, expect in zip(cases, expects):
         total = total + 1
-        correct = isValidRepoName(case) == expect
+        correct = isValidRepoName(case, prodList=prodList) == expect
         if correct:
             numCorrect = numCorrect + 1
         print('Case: \'{}\' Expect: {} Pass: {}'.format(case, expect, correct))
@@ -34,9 +54,14 @@ def testString(cases, expects):
 
 if __name__ == '__main__':
 
+    prodList = [
+        'ncr',
+        'hello'
+    ]
+
     # 1. Test with remote repos
     token = '6c9223d25aaca49ef9a118867b1bd3a40b083c85'
-    testRequestRemote(token)
+    testRequestRemote(token, prodList)
     
     # 2. String test
     casesExpects = [
@@ -46,10 +71,14 @@ if __name__ == '__main__':
         ('ncr', False),
         ('nolo-', False),
         ('-mp', False),
-        ('ncr-3', False),
+        ('ncr-3', True),
         ('_-nolo', False),
         ('ncr-nolo', True),
         ('ncr-nolo_2-', False),
-        ('ncr-nolo_2-end', True)
+        ('ncr-nolo_2-end', True),
+        ('ncr-nolo?', False),
+        ('ncr,ncr', False)
     ]
-    testString([caseExpect[0] for caseExpect in casesExpects], [caseExpect[1] for caseExpect in casesExpects])
+    testString([caseExpect[0] for caseExpect in casesExpects], \
+               [caseExpect[1] for caseExpect in casesExpects], \
+               prodList)
