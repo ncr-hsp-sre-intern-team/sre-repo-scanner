@@ -61,7 +61,7 @@ if __name__ == '__main__':
     ]
 
     # 1. Test with remote repos
-    token = 'd0275bdc86e92753dc7575e727f656dceaf7dee5'
+    token = None # should not hard code.
     orgName = 'ncr-hsp-sre-intern-team'
     testRequestRemote(token, orgName, prodList)
     
