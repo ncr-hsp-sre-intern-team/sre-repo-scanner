@@ -61,7 +61,7 @@ if __name__ == '__main__':
     ]
 
     # 1. Test with remote repos
-    token = None # should not hard code.
+    token = input('input your token: ')
     orgName = 'ncr-hsp-sre-intern-team'
     testRequestRemote(token, orgName, prodList)
     
@@ -84,3 +84,4 @@ if __name__ == '__main__':
     testString([caseExpect[0] for caseExpect in casesExpects], \
                [caseExpect[1] for caseExpect in casesExpects], \
                prodList)
+    
