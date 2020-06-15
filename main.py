@@ -1,6 +1,6 @@
-from github import Github
 import re
 import sys
+from github import Github
 
 
 def isValidRepoName(repoName, prodList=None):
@@ -14,11 +14,9 @@ def isValidRepoName(repoName, prodList=None):
     2. <product> must be one listed in prodList.
        If prodList is None, this rule is not enforced.
     Examples: "nolo-online-ordering", "enterprise-insight", "ncr-mp", "ncr-mobilepay".
-    
     Args:
         repoName: string, name of the repository to test.
-        prodList: list of strings,  
-    
+        prodList: list of strings,
     Returns:
         a boolean indicating if the repo name conforms to the naming convention
     """
@@ -31,14 +29,12 @@ def isValidRepoName(repoName, prodList=None):
 
 def testRequestRemote(token, orgName, prodList=None):
     g = Github(token)
-    org =  g.get_organization(orgName)
+    org = g.get_organization(orgName)
 
     for idx, repo in enumerate(org.get_repos()):
         print('***** Repo #%d *****' % idx)
-        
         print('Name:', repo.name)
         print('Valid: %r' % isValidRepoName(repo.name, prodList=prodList))
-
         print()
 
 
@@ -50,7 +46,7 @@ def testString(cases, expects, prodList=None):
         if correct:
             numCorrect = numCorrect + 1
         print('Case: \'{}\' Expect: {} Pass: {}'.format(case, expect, correct))
-    print ('***** Test complete %d/%d.*****' % (numCorrect, total))
+    print('***** Test complete %d/%d.*****' % (numCorrect, total))
 
 
 if __name__ == '__main__':
@@ -65,7 +61,7 @@ if __name__ == '__main__':
     token = sys.argv[1]
     orgName = 'ncr-hsp-sre-intern-team'
     testRequestRemote(token, orgName, prodList)
-    
+
     # 2. String test
     casesExpects = [
         ('', False),
