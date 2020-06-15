@@ -1,5 +1,6 @@
 from github import Github
 import re
+import sys
 
 
 def isValidRepoName(repoName, prodList=None):
@@ -61,7 +62,7 @@ if __name__ == '__main__':
     ]
 
     # 1. Test with remote repos
-    token = input('input your token: ')
+    token = sys.argv[1]
     orgName = 'ncr-hsp-sre-intern-team'
     testRequestRemote(token, orgName, prodList)
     
