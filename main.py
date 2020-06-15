@@ -30,6 +30,7 @@ def isValidRepoName(repoName, prodList=None):
 def testRequestRemote(token, orgName, prodList=None):
     g = Github(token)
     org = g.get_organization(orgName)
+    print(list(org.get_repos()))
 
     for idx, repo in enumerate(org.get_repos()):
         print('***** Repo #%d *****' % idx)
@@ -59,7 +60,7 @@ if __name__ == '__main__':
 
     # 1. Test with remote repos
     token = sys.argv[1]
-    orgName = 'ncr-hsp-sre-intern-team'
+    orgName = 'ncr-swt-hospitality'
     testRequestRemote(token, orgName, prodList)
 
     # 2. String test
